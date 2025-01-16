@@ -19,16 +19,6 @@ namespace Server.Controllers
         public async Task<List<Models.Task>> GetAll()
         {
             var tasks = await _context.Tasks.ToListAsync();
-            //var tasks = new List<Models.Task>();
-            //var mod = new Models.Task();
-            //mod.Name = "Hung1";
-            //mod.StartDate = DateTime.Now;
-            //mod.CompletionDate = DateTime.Now;
-            //mod.DueDate = DateTime.Now;
-            //mod.Assignee = "game";
-            //mod.Id = 1;
-            //mod.Description = "check";
-            //tasks.Add(mod);
             return tasks;
         } 
 

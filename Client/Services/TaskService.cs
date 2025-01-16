@@ -17,10 +17,12 @@ namespace Client.Services
             try
             {
                 return await _http.GetFromJsonAsync<List<Models.Task>>("Task"); //fetch
-                
+
+                #region other fetching
                 //var response = await _http.GetAsync("https://localhost:7126/api/Task");
                 //response.EnsureSuccessStatusCode();
                 //return await response.Content.ReadAsAsync<List<Models.Task>>();
+                #endregion
 
                 //var b = new List<Models.Task>();
                 //var a = new Models.Task()
@@ -36,7 +38,7 @@ namespace Client.Services
                 //b.Add(a);
                 //return b;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var t = ex.Message;
                 return new List<Models.Task>();
