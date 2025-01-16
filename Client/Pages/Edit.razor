@@ -1,0 +1,77 @@
+﻿@page "/edit/{id:int}"
+@using Client.Services
+@inject NavigationManager Navigation
+@inject TaskService TaskService
+
+<h3>Edit Task</h3>
+
+@if (task == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="task" OnValidSubmit="SaveTask">
+        <DataAnnotationsValidator />
+
+        <div>
+            <label>Name:</label>
+            <InputText @bind-Value="task.Name" class="form-control" />
+        </div>
+
+        <div>
+            <label>Description:</label>
+            <InputTextArea @bind-Value="task.Description" class="form-control" />
+        </div>
+
+        <div>
+            <label>Assignee:</label>
+            <InputText @bind-Value="task.Assignee" class="form-control" />
+        </div>
+
+        <div>
+            <label>Due Date:</label>
+            <InputDate @bind-Value="task.DueDate" class="form-control" />
+        </div>
+
+        <div>
+            <label>Completion Date:</label>
+            <InputDate @bind-Value="task.CompletionDate" class="form-control" />
+        </div>
+
+        <div>
+            <label>Start Date:</label>
+            <InputDate @bind-Value="task.StartDate" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private Models.Task? task;
+
+    protected override async Task OnInitializedAsync()
+    {
+        task = await TaskService.GetTaskByIdAsync(Id);
+    }
+
+    private async Task SaveTask()
+    {
+        if (task != null)
+        {
+            var success = await TaskService.UpdateTaskAsync(Id, task);
+            if (success)
+            {
+                Navigation.NavigateTo("/");
+            }
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

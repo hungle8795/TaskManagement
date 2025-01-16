@@ -26,7 +26,7 @@
                 <td>@task.CompletionDate</td>
                 <td>@task.Description</td>
                 <td>
-                    <button @onclick="() => EditTask(task)">Edit</button>
+                    <a href="/edit/@task.Id" class="btn btn-warning">Edit</a>
                     <button @onclick="() => DeleteTask(task.Id)">Delete</button>
                 </td>
             </tr>

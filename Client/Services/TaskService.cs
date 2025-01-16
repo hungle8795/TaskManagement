@@ -56,5 +56,13 @@ namespace Client.Services
 
         public async System.Threading.Tasks.Task DeleteTaskAsync(int id) =>
             await _http.DeleteAsync($"task/{id}");
+        public async Task<Models.Task?> GetTaskByIdAsync(int id) => 
+            await _http.GetFromJsonAsync<Models.Task>($"task/{id}");
+        public async Task<bool> UpdateTaskAsync(int id, Models.Task task)
+        {
+            var response = await _http.PutAsJsonAsync($"task/{id}", task);
+            return response.IsSuccessStatusCode;
+        }
+
     }
 }
