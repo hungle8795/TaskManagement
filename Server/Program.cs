@@ -1,4 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+using Server.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// CORS config
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorClient", policy =>
+    {
+        policy.WithOrigins("https://localhost:7273") // Blazor client of URL
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); // if using cookie or authen
+    });
+});
 
 // Add services to the container.
 
@@ -7,7 +22,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("Data Source=tasksmanagement.db"));
+
 var app = builder.Build();
+
+// use CORS
+app.UseCors("AllowBlazorClient");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

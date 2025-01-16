@@ -1,0 +1,71 @@
+﻿@page "/"
+@inject Client.Services.TaskService TaskService
+
+<h3>Tasks Management</h3>
+
+<button @onclick="AddNewTask">Add New Task</button>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Assignee</th>
+            <th>StartDate</th>
+            <th>DueDate</th>
+            <th>CompletionDate</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Tasks)
+        {
+            <tr>
+                <td>@task.Name</td>
+                <td>@task.Assignee</td>
+                <td>@task.StartDate</td>
+                <td>@task.DueDate</td>
+                <td>@task.CompletionDate</td>
+                <td>@task.Description</td>
+                <td>
+                    <button @onclick="() => EditTask(task)">Edit</button>
+                    <button @onclick="() => DeleteTask(task.Id)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Models.Task> Tasks = new();
+    private Models.Task NewTask = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Tasks = await TaskService.GetTasksAsync();
+        }
+        catch (Exception e)
+        {
+            var a = e.Message;
+        }
+    }
+
+    private async Task AddNewTask()
+    {
+        await TaskService.CreateTaskAsync(NewTask);
+        NewTask = new Models.Task();
+        Tasks = await TaskService.GetTasksAsync();
+    }
+
+    private async Task EditTask(Models.Task task)
+    {
+        await TaskService.UpdateTaskAsync(task);
+        Tasks = await TaskService.GetTasksAsync();
+    }
+
+    private async Task DeleteTask(int id)
+    {
+        await TaskService.DeleteTaskAsync(id);
+        Tasks = await TaskService.GetTasksAsync();
+    }
+}
