@@ -9,7 +9,6 @@ namespace Server.Data
         {
         }
         public DbSet<Models.Task> Tasks { get; set; }
-        public DbSet<TaskDetail> TaskDetails { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=tasksmanagement.db");

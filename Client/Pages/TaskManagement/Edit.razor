@@ -3,11 +3,11 @@
 @inject NavigationManager Navigation
 @inject TaskService TaskService
 
-<h3>Edit Task</h3>
+<h3>タスクの編集</h3>
 
 @if (task == null)
 {
-    <p>Loading...</p>
+    <p>読み込み中...</p>
 }
 else
 {
@@ -15,37 +15,38 @@ else
         <DataAnnotationsValidator />
 
         <div>
-            <label>Name:</label>
+            <label>名称:</label>
             <InputText @bind-Value="task.Name" class="form-control" />
         </div>
 
         <div>
-            <label>Description:</label>
-            <InputTextArea @bind-Value="task.Description" class="form-control" />
-        </div>
-
-        <div>
-            <label>Assignee:</label>
+            <label>担当:</label>
             <InputText @bind-Value="task.Assignee" class="form-control" />
         </div>
 
         <div>
-            <label>Due Date:</label>
+            <label>内容:</label>
+            <InputTextArea @bind-Value="task.Description" class="form-control" />
+        </div>
+
+        <div>
+            <label>開始日:</label>
+            <InputDate @bind-Value="task.StartDate" class="form-control"  />
+        </div>
+
+        <div>
+            <label>期限:</label>
             <InputDate @bind-Value="task.DueDate" class="form-control" />
         </div>
 
         <div>
-            <label>Completion Date:</label>
+            <label>終了日:</label>
             <InputDate @bind-Value="task.CompletionDate" class="form-control" />
         </div>
-
-        <div>
-            <label>Start Date:</label>
-            <InputDate @bind-Value="task.StartDate" class="form-control" />
+        <div class="my-3">
+            <button type="submit" class="btn btn-primary">保存</button>
+            <button type="button" class="btn btn-secondary" @onclick="Cancel">キャンセル</button>
         </div>
-
-        <button type="submit" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
     </EditForm>
 }
 
@@ -65,13 +66,13 @@ else
             var success = await TaskService.UpdateTaskAsync(Id, task);
             if (success)
             {
-                Navigation.NavigateTo("/");
+                Navigation.NavigateTo($"/taskdetail/{Id}");
             }
         }
     }
 
     private void Cancel()
     {
-        Navigation.NavigateTo("/");
+        Navigation.NavigateTo($"/taskdetail/{Id}");
     }
 }

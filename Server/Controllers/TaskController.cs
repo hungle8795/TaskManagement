@@ -15,9 +15,9 @@ namespace Server.Controllers
             _context = context;
         }
         [HttpGet()]
-        //public async Task<ActionResult<IEnumerable<Models.Task>>> GetTasks(){
-        public async Task<List<Models.Task>> GetAll()
-        {
+        public async Task<ActionResult<IEnumerable<Models.Task>>> GetTasks(){
+        //public async Task<List<Models.Task>> GetAll()
+        //{
             var tasks = await _context.Tasks.ToListAsync();
             return tasks;
         } 
@@ -32,6 +32,10 @@ namespace Server.Controllers
         [HttpPost("create")]
         public async Task<ActionResult<Models.Task>> CreateTask(Models.Task task)
         {
+            if(task == null)
+            {
+                return BadRequest();
+            }
             _context.Tasks.Add(task);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetTaskById), new { id = task.Id }, task);

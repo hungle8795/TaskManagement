@@ -1,0 +1,39 @@
+﻿@page "/taskslist"
+@inject Client.Services.TaskService TaskService
+
+<h3>タスク一覧</h3>
+
+<a href="/create" class="btn btn-success my-2">新しいタスクを追加</a>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>名称</th>
+            <th>担当</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Tasks)
+        {
+            <tr>
+                <td>
+                    <td>@task.Name</td>
+                </td>
+                <td>@task.Assignee</td>
+                <td>
+                    <a href="/taskdetail/@task.Id" class="text-decoration-none">詳細</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Models.Task> Tasks = new();
+    private Models.Task NewTask = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Tasks = await TaskService.GetTasksAsync();
+    }
+}
+

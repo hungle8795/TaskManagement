@@ -46,7 +46,7 @@ namespace Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Tasks", (string)null);
                 });
 
             modelBuilder.Entity("Server.Models.TaskDetail", b =>
@@ -74,7 +74,7 @@ namespace Server.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("TaskDetails");
+                    b.ToTable("TaskDetails", (string)null);
                 });
 
             modelBuilder.Entity("Server.Models.TaskDetail", b =>
