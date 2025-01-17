@@ -18,15 +18,22 @@ namespace Server.Controllers
             _logger = logger;
         }
 
+        /// <summary>タスクの一覧を取得、ログを記録</summary>
+        /// <returns>成功時はタスクの一覧</returns>
         [HttpGet()]
         public async Task<ActionResult<IEnumerable<TaskDetail>>> GetAll()
         {
-            //_logger.LogInformation("すべてのタスクを取得しています...");
+            _logger.LogInformation("すべてのタスクを取得しています...");
             var taskDetails = await _context.TaskDetails.ToListAsync();
-            //_logger.LogInformation("合計 {TaskCount} 件のタスクを取得しました。", taskDetails.Count);
+            _logger.LogInformation("合計 {TaskCount} 件のタスクを取得しました。", taskDetails.Count);
             return taskDetails;
         }
 
+        /// <summary>IDでタスクを取得、ログを記録</summary>
+        /// <param name="id">タスクのID</param>
+        /// <returns>
+        /// 成功時はHTTP 200 (OK)　と取得したタスク、見つからない場合はHTTP 404 (Not Found)
+        /// </returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<TaskDetail>> GetById(int id)
         {
@@ -40,6 +47,9 @@ namespace Server.Controllers
             return Ok(task);
         }
 
+        /// <summary>タスクを登録、ログを記録</summary>
+        /// <param name="taskDetail"></param>
+        /// <returns>成功時はHTTP 201 (Created) を返します。</returns>
         [HttpPost()]
         public async Task<ActionResult<TaskDetail>> Create(TaskDetail taskDetail)
         {
@@ -63,6 +73,10 @@ namespace Server.Controllers
             return CreatedAtAction(nameof(GetById), new { id = taskDetail.Id }, taskDetail);
         }
 
+        /// <summary>タスクを更新、ログを記録</summary>
+        /// <param name="id">タスクのID</param>
+        /// <param name="taskDetail">更新するタスクのデータ</param>
+        /// <returns>成功時は更新されたタスクのデータ。</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, TaskDetail taskDetail)
         {
@@ -91,6 +105,12 @@ namespace Server.Controllers
             return NoContent();
         }
 
+        /// <summary>IDでタスクを削除</summary>
+        /// <param name="id">タスクのID</param>
+        /// <returns>
+        /// 成功時: HTTPステータスコード204 (No Content)。  
+        /// プロダクトが存在しない場合: HTTP 404 (Not Found)。
+        /// </returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteById(int id)
         {
