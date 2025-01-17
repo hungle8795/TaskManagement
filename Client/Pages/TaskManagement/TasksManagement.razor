@@ -1,6 +1,7 @@
-﻿@page "/taskslist"
+﻿@page "/tasksmanagement"
 @inject Client.Services.TaskService TaskService
 
+<div class="container-fluid">
 <h3>タスク一覧</h3>
 
 <a href="/create" class="btn btn-success my-2">新しいタスクを追加</a>
@@ -12,7 +13,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var task in Tasks)
+            @foreach (var task in tasks)
         {
             <tr>
                 <td>
@@ -26,14 +27,15 @@
         }
     </tbody>
 </table>
+</div>
 
 @code {
-    private List<Models.Task> Tasks = new();
-    private Models.Task NewTask = new();
+    private List<Models.TaskDetail> tasks = new();
+    private Models.TaskDetail NewTask = new();
 
     protected override async Task OnInitializedAsync()
     {
-        Tasks = await TaskService.GetTasksAsync();
+        tasks = await TaskService.GetTasksAsync();
     }
 }
 

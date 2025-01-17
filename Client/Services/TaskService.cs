@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using Client.Models;
+using Client.Pages.TaskManagement;
 
 namespace Client.Services
 {
@@ -12,35 +13,27 @@ namespace Client.Services
             _http = http;
         }
 
-        public async Task<List<Models.Task>> GetTasksAsync()
+        public async Task<List<Models.TaskDetail>> GetTasksAsync()
         {
-            try
-            {
-                return await _http.GetFromJsonAsync<List<Models.Task>>("Task"); //fetch
-            }
-            catch (Exception ex)
-            {
-                var t = ex.Message;
-                return new List<Models.Task>();
-            }
+            return await _http.GetFromJsonAsync<List<Models.TaskDetail>>("taskdetail"); //fetch
         }
 
-        public async Task<Models.Task?> GetItemByIdAsync(int id) =>
-            await _http.GetFromJsonAsync<Models.Task>($"task/{id}");
+        public async Task<Models.TaskDetail?> GetItemByIdAsync(int id) =>
+            await _http.GetFromJsonAsync<Models.TaskDetail>($"taskdetail/{id}");
 
-        public async System.Threading.Tasks.Task<bool> CreateTaskAsync(Models.Task task)
+        public async Task<bool> CreateTaskAsync(Models.TaskDetail taskDetail)
         {
-            var response = await _http.PostAsJsonAsync("task/create", task);
+            var response = await _http.PostAsJsonAsync("taskdetail/create", taskDetail);
             return response.IsSuccessStatusCode;
         }
 
-        public async System.Threading.Tasks.Task DeleteTaskAsync(int id) =>
-            await _http.DeleteAsync($"task/{id}");
-        public async Task<Models.Task> GetTaskByIdAsync(int id) => 
-            await _http.GetFromJsonAsync<Models.Task>($"task/{id}");
-        public async Task<bool> UpdateTaskAsync(int id, Models.Task task)
+        public async Task DeleteTaskAsync(int id) =>
+            await _http.DeleteAsync($"taskdetail/{id}");
+        public async Task<Models.TaskDetail> GetTaskByIdAsync(int id) =>
+            await _http.GetFromJsonAsync<Models.TaskDetail>($"taskdetail/{id}");
+        public async Task<bool> UpdateTaskAsync(int id, Models.TaskDetail taskDetail)
         {
-            var response = await _http.PutAsJsonAsync($"task/{id}", task);
+            var response = await _http.PutAsJsonAsync($"taskdetail/{id}", taskDetail);
             return response.IsSuccessStatusCode;
         }
 

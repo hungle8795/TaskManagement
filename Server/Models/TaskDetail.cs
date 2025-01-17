@@ -1,6 +1,6 @@
-﻿namespace Client.Models
+﻿namespace Server.Models
 {
-    public class Task
+    public class TaskDetail
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;

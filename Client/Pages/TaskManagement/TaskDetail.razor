@@ -4,60 +4,62 @@
 @inject TaskService TaskService
 @inject HttpClient _http
 
-<h3>タスク詳細</h3>
+<div class="container-fluid">
+    <h3>タスク詳細</h3>
 
-@if (Task == null)
-{
-    <p>読み込み中...</p>
-}
-else
-{
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr class="text-center">
-                <th>名称</th>
-                <th>担当</th>
-                <th>内容</th>
-                <th>開始日</th>
-                <th>期限</th>
-                <th>終了日</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="align-middle">
-                <td>@Task.Name</td>
-                <td>@Task.Assignee</td>
-                <td>@Task.Description</td>
-                <td>@(Task.StartDate?.ToString("yyyy/MM/dd") ?? "N/A")</td>
-                <td>@(Task.DueDate?.ToString("yyyy/MM/dd") ?? "N/A")</td>
-                <td>@(Task.CompletionDate?.ToString("yyyy/MM/dd") ?? "N/A")</td>
-                <td class="d-flex justify-content-evenly">
-                    <a href="/edit/@Task.Id" class="btn btn-warning">編集</a>
-                    <a @onclick="() => DeleteTask(Task.Id)" class="btn btn-danger">削除</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <a @onclick="GoBack" class="btn btn-primary">戻る</a>
-}
+    @if (taskDetail == null)
+    {
+        <p>読み込み中...</p>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr class="text-center">
+                    <th>名称</th>
+                    <th>担当</th>
+                    <th>内容</th>
+                    <th>開始日</th>
+                    <th>期限</th>
+                    <th>終了日</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="align-middle">
+                    <td>@taskDetail.Name</td>
+                    <td>@taskDetail.Assignee</td>
+                    <td>@taskDetail.Description</td>
+                    <td>@(taskDetail.StartDate?.ToString("yyyy/MM/dd") ?? "N/A")</td>
+                    <td>@(taskDetail.DueDate?.ToString("yyyy/MM/dd") ?? "N/A")</td>
+                    <td>@(taskDetail.CompletionDate?.ToString("yyyy/MM/dd") ?? "N/A")</td>
+                    <td class="d-flex justify-content-evenly">
+                        <a href="/edit/@taskDetail.Id" class="btn btn-warning">編集</a>
+                        <a @onclick="() => DeleteTask(taskDetail.Id)" class="btn btn-danger">削除</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a @onclick="GoBack" class="btn btn-primary">戻る</a>
+    }
+</div>
 
 @code {
     [Parameter] public int id { get; set; }
-    private Models.Task Task;
+    private Models.TaskDetail taskDetail;
 
     protected override async Task OnInitializedAsync()
     {
-        Task = await TaskService.GetTaskByIdAsync(id);
+        taskDetail = await TaskService.GetTaskByIdAsync(id);
     }
 
     private async Task DeleteTask(int id)
     {
         await TaskService.DeleteTaskAsync(id);
-        Navigation.NavigateTo("/taskslist");
+        Navigation.NavigateTo("/tasksmanagement");
     }
 
     private void GoBack()
     {
-        Navigation.NavigateTo("/taskslist");
+        Navigation.NavigateTo("/tasksmanagement");
     }
 }

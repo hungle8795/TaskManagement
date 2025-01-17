@@ -3,59 +3,62 @@
 @inject NavigationManager Navigation
 @inject TaskService TaskService
 
-<h3>タスクの作成</h3>
+<div class="w-50 mx-auto my-5">
+    <h3>タスクの作成</h3>
 
-<EditForm Model="task" OnValidSubmit="SaveTask">
-    <DataAnnotationsValidator />
+    <EditForm Model="taskDetail" OnValidSubmit="SaveTask">
+        <DataAnnotationsValidator />
+        <div>
+            <label>名称:</label>
+            <InputText @bind-Value="taskDetail.Name" class="form-control" />
+            <ValidationMessage For="@(() => taskDetail.Name)" />
+        </div>
 
-    <div>
-        <label>名称:</label>
-        <InputText @bind-Value="task.Name" class="form-control" />
-    </div>
+        <div>
+            <label>担当:</label>
+            <InputText @bind-Value="taskDetail.Assignee" class="form-control" />
+            <ValidationMessage For="@(() => taskDetail.Assignee)" />
+        </div>
 
-    <div>
-        <label>担当:</label>
-        <InputText @bind-Value="task.Assignee" class="form-control" />
-    </div>
+        <div>
+            <label>内容:</label>
+            <InputTextArea @bind-Value="taskDetail.Description" class="form-control" />
+        </div>
 
-    <div>
-        <label>内容:</label>
-        <InputTextArea @bind-Value="task.Description" class="form-control" />
-    </div>
+        <div>
+            <label>開始日:</label>
+            <InputDate @bind-Value="taskDetail.StartDate" class="form-control" />
+        </div>
 
-    <div>
-        <label>開始日:</label>
-        <InputDate @bind-Value="task.StartDate" class="form-control" />
-    </div>
+        <div>
+            <label>期限:</label>
+            <InputDate @bind-Value="taskDetail.DueDate" class="form-control" />
+        </div>
 
-    <div>
-        <label>期限:</label>
-        <InputDate @bind-Value="task.DueDate" class="form-control" />
-    </div>
-
-    <div>
-        <label>終了日:</label>
-        <InputDate @bind-Value="task.CompletionDate" class="form-control" />
-    </div>
-    <div class="my-3">
-        <button type="submit" class="btn btn-primary">保存</button>
-        <button type="button" class="btn btn-secondary" @onclick="Cancel">キャンセル</button>
-    </div>
-</EditForm>
+        <div>
+            <label>終了日:</label>
+            <InputDate @bind-Value="taskDetail.CompletionDate" class="form-control" />
+        </div>
+        <div class="my-3">
+            <button type="submit" class="btn btn-primary">保存</button>
+            <button type="button" class="btn btn-secondary" @onclick="Cancel">キャンセル</button>
+        </div>
+    </EditForm>
+</div>
 
 @code {
-    private Models.Task task = new();
+    private Models.TaskDetail taskDetail = new();
     private async Task SaveTask()
     {
-        var success = await TaskService.CreateTaskAsync(task);
+        var success = await TaskService.CreateTaskAsync(taskDetail);
         if (success)
         {
-            Navigation.NavigateTo("/taskslist");
+            Navigation.NavigateTo("/tasksmanagement");
         }
     }
     private void Cancel()
     {
-        Navigation.NavigateTo("/taskslist");
+        Navigation.NavigateTo("/tasksmanagement");
     }
 
 }
