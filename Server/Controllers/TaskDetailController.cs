@@ -15,7 +15,7 @@ namespace Server.Controllers
         public TaskDetailController(AppDbContext context, ILogger<TaskDetailController> logger)
         {
             _context = context;
-            _logger = logger;
+            _logger = logger; //ログは"logs/tasklog.txt"に保存
         }
 
         /// <summary>タスクの一覧を取得、ログを記録</summary>
@@ -24,9 +24,9 @@ namespace Server.Controllers
         public async Task<ActionResult<IEnumerable<TaskDetail>>> GetAll()
         {
             _logger.LogInformation("すべてのタスクを取得しています...");
-            var taskDetails = await _context.TaskDetails.ToListAsync();
+            // データベースからタスクの詳細を取得
+            var taskDetails = await _context.TaskDetails.ToListAsync(); 
             _logger.LogInformation("合計 {TaskCount} 件のタスクを取得しました。", taskDetails.Count);
-
 
             return taskDetails;
         }
@@ -37,6 +37,7 @@ namespace Server.Controllers
         public async Task<ActionResult<TaskDetail>> GetById(int id)
         {
             _logger.LogInformation("ID {TaskId} のタスクを取得しています...", id);
+            // データベースからIDに一致するタスクを検索
             var task = await _context.TaskDetails.FindAsync(id);
             if (task == null)
             {
@@ -111,6 +112,8 @@ namespace Server.Controllers
         public async Task<IActionResult> DeleteById(int id)
         {
             _logger.LogInformation("ID {TaskId} のタスクを削除しています...", id);
+
+            // データベースからIDに一致するタスクを検索
             var task = await _context.TaskDetails.FindAsync(id);
             if (task == null)
             {
