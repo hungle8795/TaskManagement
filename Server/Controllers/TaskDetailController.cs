@@ -26,14 +26,13 @@ namespace Server.Controllers
             _logger.LogInformation("すべてのタスクを取得しています...");
             var taskDetails = await _context.TaskDetails.ToListAsync();
             _logger.LogInformation("合計 {TaskCount} 件のタスクを取得しました。", taskDetails.Count);
+
+
             return taskDetails;
         }
 
         /// <summary>IDでタスクを取得、ログを記録</summary>
-        /// <param name="id">タスクのID</param>
-        /// <returns>
-        /// 成功時はHTTP 200 (OK)　と取得したタスク、見つからない場合はHTTP 404 (Not Found)
-        /// </returns>
+        /// <returns>成功時はHTTP 200 (OK)　と取得したタスク、見つからない場合はHTTP 404 (Not Found)</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<TaskDetail>> GetById(int id)
         {
@@ -48,7 +47,6 @@ namespace Server.Controllers
         }
 
         /// <summary>タスクを登録、ログを記録</summary>
-        /// <param name="taskDetail"></param>
         /// <returns>成功時はHTTP 201 (Created) を返します。</returns>
         [HttpPost()]
         public async Task<ActionResult<TaskDetail>> Create(TaskDetail taskDetail)
@@ -61,8 +59,8 @@ namespace Server.Controllers
             _logger.LogInformation("新しいタスクを作成中: {TaskName} (担当者: {Assignee})", taskDetail.Name, taskDetail.Assignee);
             try
             {
-                _context.TaskDetails.Add(taskDetail);
-                await _context.SaveChangesAsync();
+                _context.TaskDetails.Add(taskDetail); // タスクをデータベースに追加
+                await _context.SaveChangesAsync(); // 変更を保存
                 _logger.LogInformation("タスク {TaskName} が正常に作成されました。ID: {TaskId}", taskDetail.Name, taskDetail.Id);
             }
             catch (Exception ex)
@@ -74,8 +72,6 @@ namespace Server.Controllers
         }
 
         /// <summary>タスクを更新、ログを記録</summary>
-        /// <param name="id">タスクのID</param>
-        /// <param name="taskDetail">更新するタスクのデータ</param>
         /// <returns>成功時は更新されたタスクのデータ。</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, TaskDetail taskDetail)
@@ -85,11 +81,12 @@ namespace Server.Controllers
                 _logger.LogWarning("タスク更新: ID {TaskId} とペイロード ID {PayloadId} が一致しません。", id, taskDetail.Id);
                 return BadRequest();
             }
-            _context.Entry(taskDetail).State = EntityState.Modified;
+
+            _context.Entry(taskDetail).State = EntityState.Modified; // エンティティを変更済みとしてマーク
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // 変更を保存
                 _logger.LogInformation("ID {TaskId} のタスクを正常に更新しました。", id);
             }
             catch (DbUpdateConcurrencyException)
@@ -106,7 +103,6 @@ namespace Server.Controllers
         }
 
         /// <summary>IDでタスクを削除</summary>
-        /// <param name="id">タスクのID</param>
         /// <returns>
         /// 成功時: HTTPステータスコード204 (No Content)。  
         /// プロダクトが存在しない場合: HTTP 404 (Not Found)。
@@ -121,8 +117,8 @@ namespace Server.Controllers
                 _logger.LogWarning("タスク削除: ID {TaskId} のタスクが見つかりませんでした。", id);
                 return NotFound();
             }
-            _context.TaskDetails.Remove(task);
-            await _context.SaveChangesAsync();
+            _context.TaskDetails.Remove(task); // タスクをデータベースから削除
+            await _context.SaveChangesAsync(); // 変更を保存
             _logger.LogInformation("ID {TaskId} のタスクを正常に削除しました。", id);
             return NoContent();
         }

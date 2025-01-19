@@ -33,7 +33,7 @@
                     <td>@(taskDetail.DueDate?.ToString("yyyy/MM/dd") ?? "N/A")</td>
                     <td>@(taskDetail.CompletionDate?.ToString("yyyy/MM/dd") ?? "N/A")</td>
                     <td class="d-flex justify-content-evenly">
-                        <a href="/edit/@taskDetail.Id" class="btn btn-warning">編集</a>
+                        <a href="/tasksmanagement/edit/@taskDetail.Id" class="btn btn-warning">編集</a>
                         <a @onclick="() => DeleteTask(taskDetail.Id)" class="btn btn-danger">削除</a>
                     </td>
                 </tr>
