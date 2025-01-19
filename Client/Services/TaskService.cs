@@ -20,6 +20,7 @@ namespace Client.Services
             _logger.LogInformation("API からすべてのタスクを取得しています...");
             try
             {
+                // API GET を呼び出してタスクのリストを取得
                 var tasks = await _http.GetFromJsonAsync<List<Models.TaskDetail>>("taskdetail");
                 _logger.LogInformation("合計 {TaskCount} 件のタスクを取得しました。", tasks?.Count ?? 0);
                 return tasks;
@@ -27,7 +28,7 @@ namespace Client.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "API からタスクを取得中にエラーが発生しました。");
-                return new List<Models.TaskDetail>();
+                return new List<Models.TaskDetail>(); // エラーが発生した場合、空のリストを返す
             }
         }
 
@@ -35,6 +36,7 @@ namespace Client.Services
             _logger.LogInformation("ID {TaskId} のタスクを取得しています...", id);
             try
             {
+                // API GET を呼び出して ID に基づいたタスクを取得
                 var task = await _http.GetFromJsonAsync<Models.TaskDetail>($"taskdetail/{id}");
                 if (task == null)
                 {
@@ -45,7 +47,7 @@ namespace Client.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "ID {TaskId} のタスクを取得中にエラーが発生しました。", id);
-                return null;
+                return null; // エラーが発生した場合、null を返す
             }
         }
 
@@ -54,6 +56,7 @@ namespace Client.Services
             _logger.LogInformation("新しいタスクを作成中: {TaskName} (担当者: {Assignee})", taskDetail.Name, taskDetail.Assignee);
             try
             {
+                // API POST を呼び出して新しいタスクを作成
                 var response = await _http.PostAsJsonAsync("taskdetail", taskDetail);
                 if (response.IsSuccessStatusCode)
                 {
@@ -77,6 +80,7 @@ namespace Client.Services
             _logger.LogInformation("ID {TaskId} のタスクを削除しています...", id);
             try
             {
+                // API DELETE を呼び出して ID に基づいたタスクを削除
                 var response = await _http.DeleteAsync($"taskdetail/{id}");
                 if (response.IsSuccessStatusCode)
                 {
@@ -98,6 +102,7 @@ namespace Client.Services
             _logger.LogInformation("ID {TaskId} のタスクを更新しています...", id);
             try
             {
+                // API PUT を呼び出して ID に基づいたタスクを更新
                 var response = await _http.PutAsJsonAsync($"taskdetail/{id}", taskDetail);
                 if (response.IsSuccessStatusCode)
                 {
