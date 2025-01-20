@@ -71,8 +71,7 @@
     {
         var confirmation = await dialog.ShowAsync(
             title: "本当に編集してもよろしいですか？",
-            message1: "この操作により、レコードが編集されます。",
-            message2: "続行しますか？"
+            message1: "続行しますか？"
         );
         if (taskDetail != null && confirmation)
         {
