@@ -3,7 +3,9 @@
 @inject NavigationManager Navigation
 @inject TaskService TaskService
 @inject HttpClient _http
+@inject IJSRuntime JS
 
+<ConfirmDialog @ref="dialog" />
 <div class="container-fluid">
     <h3>タスク詳細</h3>
 
@@ -46,6 +48,7 @@
 @code {
     [Parameter] public int id { get; set; }
     private Models.TaskDetail taskDetail;
+    private ConfirmDialog dialog;
 
     protected override async Task OnInitializedAsync()
     {
@@ -54,8 +57,18 @@
 
     private async Task DeleteTask(int id)
     {
-        await TaskService.DeleteTaskAsync(id);
-        Navigation.NavigateTo("/tasksmanagement");
+
+        var confirmation = await dialog.ShowAsync(
+            title: "本当に削除してもよろしいですか？",
+            message1: "この操作により、レコードが削除されます。",
+            message2: "続行しますか？"
+        );
+        if (confirmation)
+        {
+            await TaskService.DeleteTaskAsync(id);
+            Navigation.NavigateTo("/tasksmanagement");
+            await JS.InvokeVoidAsync("alert", "レコードは正常に削除されました！");
+        }
     }
 
     private void GoBack()

@@ -1,7 +1,9 @@
 ﻿@page "/tasksmanagement/edit/{id:int}"
 @using Client.Services
+@using MudBlazor
 @inject NavigationManager Navigation
 @inject TaskService TaskService
+@inject IJSRuntime JS
 
 <div class="w-50 mx-auto my-5">
     <h3>タスクの編集</h3>
@@ -12,6 +14,7 @@
     }
     else
     {
+        <ConfirmDialog @ref="dialog" />
         <EditForm Model="taskDetail" OnValidSubmit="SaveTask">
             <DataAnnotationsValidator />
 
@@ -57,6 +60,7 @@
 @code {
     [Parameter] public int Id { get; set; }
     private Models.TaskDetail? taskDetail;
+    private ConfirmDialog dialog;
 
     protected override async Task OnInitializedAsync()
     {
@@ -65,11 +69,17 @@
 
     private async Task SaveTask()
     {
-        if (taskDetail != null)
+        var confirmation = await dialog.ShowAsync(
+            title: "本当に編集してもよろしいですか？",
+            message1: "この操作により、レコードが編集されます。",
+            message2: "続行しますか？"
+        );
+        if (taskDetail != null && confirmation)
         {
             var success = await TaskService.UpdateTaskAsync(Id, taskDetail);
             if (success)
             {
+                await JS.InvokeVoidAsync("alert", "レコードは正常に編集されました！");
                 Navigation.NavigateTo($"/taskdetail/{Id}");
             }
         }

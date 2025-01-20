@@ -2,9 +2,11 @@
 @using Client.Services
 @inject NavigationManager Navigation
 @inject TaskService TaskService
+@inject IJSRuntime JS
 
 <div class="w-50 mx-auto my-5">
     <h3>タスクの作成</h3>
+    <ConfirmDialog @ref="dialog" />
 
     <EditForm Model="taskDetail" OnValidSubmit="SaveTask">
         <DataAnnotationsValidator />
@@ -48,12 +50,22 @@
 
 @code {
     private Models.TaskDetail taskDetail = new();
+    private ConfirmDialog dialog;
     private async Task SaveTask()
     {
-        var success = await TaskService.CreateTaskAsync(taskDetail);
-        if (success)
+        var confirmation = await dialog.ShowAsync(
+            title: "本当に作成してもよろしいですか？",
+            message1: "この作成により、レコードが削除されます。",
+            message2: "続行しますか？"
+        );
+        if (confirmation)
         {
-            Navigation.NavigateTo("/tasksmanagement");
+            var success = await TaskService.CreateTaskAsync(taskDetail);
+            if (success)
+            {
+                Navigation.NavigateTo("/tasksmanagement");
+                await JS.InvokeVoidAsync("alert", "レコードは正常に作成されました！");
+            }
         }
     }
     private void Cancel()
