@@ -9,9 +9,9 @@
     </div>
 </div>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+<div class="nav-scrollable collapse d-md-block pt-3 @(collapseNavMenu ? "" : "show")">
     <nav class="flex-column">
-        <div class="nav-item px-3">
+        <div class="px-3">
             <h5 class="text-white ps-2">ページ一覧</h5>
         </div>
         <div class="nav-item px-3">
@@ -25,10 +25,9 @@
 @code {
     private bool collapseNavMenu = true;
 
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+        StateHasChanged();
     }
 }
